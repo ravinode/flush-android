@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,
@@ -80,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onPlaceSelected(Place place) {
                 final LatLng latLngLoc = place.getLatLng();
+                    Toast.makeText(MapsActivity.this, ""+latLngLoc.toString(), Toast.LENGTH_SHORT).show();
 
                 if(marker!=null){
                     marker.remove();
@@ -135,7 +137,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //show marker
             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("your position"));
             //Animate camera to your position
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15.0f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 10));
+            getLocation(latitude,longitude,2);
         }
     }
 
@@ -250,5 +253,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mLocation = location;
         displayLocation();
+    }
+
+    public static LatLng getLocation(double lon, double lat, int radius)
+    {
+        float[] results = new float[1];
+        Location.distanceBetween(lon, lat, testLatitude, testLongitude, results);
+        float distanceInMeters = results[0];
+        boolean isWithin10km = distanceInMeters < 10000;
+
     }
 }
